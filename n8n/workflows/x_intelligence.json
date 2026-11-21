@@ -1,0 +1,72 @@
+{
+  "name": "Monitor - X 商业情报 READY 检查（每日 07:00）",
+  "nodes": [
+    {
+      "id": "5b12ce48-d82b-4386-9be3-29774a32abee",
+      "name": "每日 07:00（Asia/Shanghai）",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "daysInterval": 1,
+              "triggerAtHour": 7,
+              "triggerAtMinute": 0
+            }
+          ]
+        },
+        "misfirePolicy": "skip"
+      }
+    },
+    {
+      "id": "450bf4f1-2737-425b-b167-384683216d66",
+      "name": "调用 OPS X 商业情报 READY 检查",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        560,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://ingest.monitor.qjai.org/v1/checks/x_intelligence",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": false,
+        "options": {
+          "timeout": 60000
+        },
+        "parameters": {
+          "url": "https://ingest.ops.qjai.org/v1/checks/x_intelligence?probe=2026-11-21"
+        }
+      },
+      "onError": "stopWorkflow"
+    }
+  ],
+  "connections": {
+    "每日 07:00（Asia/Shanghai）": {
+      "main": [
+        [
+          {
+            "node": "调用 OPS X 商业情报 READY 检查",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "timezone": "Asia/Shanghai",
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "none"
+  },
+  "active": false
+}

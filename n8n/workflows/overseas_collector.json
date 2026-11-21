@@ -1,28 +1,41 @@
 {
-  "name": "OPS - 海外创业志周度采集检查（每周一 20:00）",
+  "name": "Monitor - 海外创业志周度采集检查（每周一 20:00）",
   "nodes": [
     {
+      "id": "918cb7d8-dddb-45f8-b00f-624bd438c988",
+      "name": "每周一 20:00（Asia/Shanghai）",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        240,
+        300
+      ],
       "parameters": {
         "rule": {
           "interval": [
             {
               "field": "weeks",
               "weeksInterval": 1,
-              "triggerAtDay": [1],
+              "triggerAtDay": [
+                1
+              ],
               "triggerAtHour": 20,
               "triggerAtMinute": 0
             }
           ]
         },
         "misfirePolicy": "skip"
-      },
-      "id": "ops-overseas-weekly-schedule",
-      "name": "每周一 20:00（Asia/Shanghai）",
-      "type": "n8n-nodes-base.scheduleTrigger",
-      "typeVersion": 1.4,
-      "position": [240, 300]
+      }
     },
     {
+      "id": "b9f4a9ad-4708-40e6-82fc-08725eb6a5b4",
+      "name": "调用 OPS 海外创业志周度检查",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        560,
+        300
+      ],
       "parameters": {
         "method": "POST",
         "url": "https://ingest.monitor.qjai.org/v1/checks/overseas_collector",
@@ -33,11 +46,6 @@
           "timeout": 60000
         }
       },
-      "id": "ops-overseas-weekly-check",
-      "name": "调用 OPS 海外创业志周度检查",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.5,
-      "position": [560, 300],
       "onError": "stopWorkflow",
       "retryOnFail": false
     }
@@ -57,10 +65,9 @@
   },
   "settings": {
     "timezone": "Asia/Shanghai",
-    "saveExecutionProgress": false,
+    "executionOrder": "v1",
     "saveDataErrorExecution": "all",
-    "saveDataSuccessExecution": "none",
-    "executionOrder": "v1"
+    "saveDataSuccessExecution": "none"
   },
   "active": false
 }

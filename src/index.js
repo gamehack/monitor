@@ -111,12 +111,12 @@ async function privateRouter(req,env,now){
 }
 export async function dispatch(req,env,now=Date.now()){
  const url=new URL(req.url),host=url.hostname.toLowerCase();
- if(host==='ingest.monitor.qjai.org'||host==='ingest.ops.qjai.org'){
+ if(host==='ingest.monitor.qjai.org'){
   const handler=CHECK_ROUTES[url.pathname];
   if(!handler||req.method!=='POST')return json({error:'not_found'},404);
   return handler(req,env,now);
  }
- if(host!=='monitor.qjai.org'&&host!=='ops.qjai.org')return json({error:'not_found'},404);
+ if(host!=='monitor.qjai.org')return json({error:'not_found'},404);
  if(req.method==='GET'&&url.pathname==='/healthz')return json({ok:true});
  return privateRouter(req,env,now);
 }

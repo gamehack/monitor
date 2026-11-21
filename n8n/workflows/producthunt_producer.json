@@ -1,54 +1,58 @@
 {
-  "name": "OPS - producthunt_producer (18:00 CST)",
+  "name": "Monitor - Product Hunt READY 检查（每日 18:00）",
   "nodes": [
     {
+      "id": "ecd0b354-185f-4d9d-a0d9-8e1fe4db9a86",
+      "name": "每日 18:00（Asia/Shanghai）",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        240,
+        300
+      ],
       "parameters": {
         "rule": {
           "interval": [
             {
               "field": "days",
+              "daysInterval": 1,
               "triggerAtHour": 18,
               "triggerAtMinute": 0
             }
           ]
-        }
-      },
-      "id": "scheduler",
-      "name": "Schedule Trigger",
-      "type": "n8n-nodes-base.scheduleTrigger",
-      "typeVersion": 1.2,
-      "position": [
-        240,
-        300
-      ]
+        },
+        "misfirePolicy": "skip"
+      }
     },
     {
+      "id": "48330522-94c9-4fad-a166-263cb385a2a4",
+      "name": "调用 OPS Product Hunt READY 检查",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        560,
+        300
+      ],
       "parameters": {
         "method": "POST",
         "url": "https://ingest.monitor.qjai.org/v1/checks/producthunt_producer",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
+        "sendBody": false,
         "options": {
           "timeout": 60000
-        },
-        "sendBody": false
+        }
       },
-      "id": "http",
-      "name": "Call OPS monitor",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        490,
-        300
-      ]
+      "onError": "stopWorkflow",
+      "retryOnFail": false
     }
   ],
   "connections": {
-    "Schedule Trigger": {
+    "每日 18:00（Asia/Shanghai）": {
       "main": [
         [
           {
-            "node": "Call OPS monitor",
+            "node": "调用 OPS Product Hunt READY 检查",
             "type": "main",
             "index": 0
           }
@@ -58,9 +62,9 @@
   },
   "settings": {
     "timezone": "Asia/Shanghai",
-    "saveDataSuccessExecution": "none",
+    "executionOrder": "v1",
     "saveDataErrorExecution": "all",
-    "executionOrder": "v1"
+    "saveDataSuccessExecution": "none"
   },
   "active": false
 }

@@ -1,0 +1,72 @@
+{
+  "name": "Monitor - TrustMRR 周榜 READY 检查（每周一 19:00）",
+  "nodes": [
+    {
+      "id": "adf3cbaf-9fa2-43fe-bb1f-89138d8de3c6",
+      "name": "每周一 19:00（Asia/Shanghai）",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "weeksInterval": 1,
+              "triggerAtDay": [
+                1
+              ],
+              "triggerAtHour": 19,
+              "triggerAtMinute": 0
+            }
+          ]
+        },
+        "misfirePolicy": "skip"
+      }
+    },
+    {
+      "id": "b6ff091e-6ff2-4ff5-8d73-e659ee80c028",
+      "name": "调用 OPS TrustMRR 周报 READY 检查",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        560,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://ingest.monitor.qjai.org/v1/checks/trustmrr_weekly",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": false,
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "onError": "stopWorkflow"
+    }
+  ],
+  "connections": {
+    "每周一 19:00（Asia/Shanghai）": {
+      "main": [
+        [
+          {
+            "node": "调用 OPS TrustMRR 周报 READY 检查",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "timezone": "Asia/Shanghai",
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "none"
+  },
+  "active": false
+}
