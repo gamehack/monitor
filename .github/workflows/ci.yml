@@ -35,3 +35,14 @@ jobs:
           print("MONITOR_BUNDLE_END")
           print("MONITOR_BUNDLE_SIZE:" + str(len(code)))
           PY
+      - name: Smoke test live Monitor domains
+        if: contains(github.event.head_commit.message, '[smoke-monitor]')
+        run: |
+          set -eu
+          curl --fail --silent --show-error --max-time 20 https://monitor.qjai.org/healthz | grep -q '"ok":true'
+          curl --fail --silent --show-error --max-time 20 https://monitor.qjai.org/login | grep -q '/api/login'
+          code=$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 20 https://ingest.monitor.qjai.org/v1/checks/producthunt_producer)
+          test "$code" = 404
+          code=$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 20 -X POST -H 'Content-Type: application/json' --data '{}' https://ingest.monitor.qjai.org/v1/checks/producthunt_producer)
+          test "$code" = 401
+          echo "Monitor public-domain smoke checks passed."
