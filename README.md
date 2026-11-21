@@ -37,7 +37,7 @@ Set the following **only in deployment secrets / local ignored config**, never c
 | `OPS_TRUSTMRR_NOTION_PARENT_ID` | Parent Notion page for TrustMRR |
 | `HYPERDRIVE` | Production Hyperdrive binding to PostgreSQL |
 
-The committed `wrangler.jsonc` is intentionally a non-production template. Configure your own account, Hyperdrive ID, hosts, and secrets through private Cloudflare configuration. Do not deploy a template over an existing production Worker without reviewing bindings.
+The committed `wrangler.jsonc` is intentionally a non-production template. The QJAI production Worker retains its existing internal service name so its protected Secrets and Hyperdrive connection can be reused; this internal name does not affect the new public GitHub repository or hostnames. Configure your own account, Hyperdrive ID, hosts, and secrets through private Cloudflare configuration. Do not deploy a template over an existing production Worker without reviewing bindings.
 
 ## Development
 
@@ -55,7 +55,7 @@ CI only validates and bundles. No workflow in this repository deploys production
 
 - Successful checks send no message. Failed checks notify via Feishu; no automatic remediation.
 - The console only checks on first load and manual refresh, with no repeated polling.
-- n8n Workflows must use header credentials stored within n8n. Two sanitized templates are included in `n8n/workflows`.
+- n8n Workflows must use header credentials stored within n8n. Five sanitized templates are included in `n8n/workflows`.
 - The open-source code is a **clean snapshot**; no commits, PRs, deployment incidents, or private runbooks from the previous repository are imported.
 
 ## License
