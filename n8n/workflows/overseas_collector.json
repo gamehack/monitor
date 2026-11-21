@@ -1,0 +1,66 @@
+{
+  "name": "OPS - 海外创业志周度采集检查（每周一 20:00）",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "weeksInterval": 1,
+              "triggerAtDay": [1],
+              "triggerAtHour": 20,
+              "triggerAtMinute": 0
+            }
+          ]
+        },
+        "misfirePolicy": "skip"
+      },
+      "id": "ops-overseas-weekly-schedule",
+      "name": "每周一 20:00（Asia/Shanghai）",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ingest.monitor.qjai.org/v1/checks/overseas_collector",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": false,
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "ops-overseas-weekly-check",
+      "name": "调用 OPS 海外创业志周度检查",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [560, 300],
+      "onError": "stopWorkflow",
+      "retryOnFail": false
+    }
+  ],
+  "connections": {
+    "每周一 20:00（Asia/Shanghai）": {
+      "main": [
+        [
+          {
+            "node": "调用 OPS 海外创业志周度检查",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "timezone": "Asia/Shanghai",
+    "saveExecutionProgress": false,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "none",
+    "executionOrder": "v1"
+  },
+  "active": false
+}

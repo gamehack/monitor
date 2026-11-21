@@ -1,0 +1,22 @@
+name: Monitor Worker CI
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test-and-bundle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install --ignore-scripts --no-audit --no-fund
+      - name: Verify syntax and retained monitor contracts
+        run: npm run ci
+      - name: Dry-run production Worker bundle
+        run: npx --yes wrangler@4 deploy --dry-run --outdir=dist --minify --strict
